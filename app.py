@@ -63,9 +63,40 @@ def signup():
                 return render_template('signup.html', msg='Sign up unsuccessful! Passwords do not match.')
 
 
-@app.route('/login')
+@app.route('/login', methods=['POST', 'GET'])
 def login():
-    return render_template('login.html')
+    if request.method == 'GET':
+        return render_template('login.html')
+    else:
+        email = request.form['email']
+        password = request.form['password']
+
+        db = get_db()
+        cursor = db.cursor()
+        
+        # Execute the SELECT statement with a WHERE clause to check if the email exists
+        cursor.execute('SELECT email, password FROM users WHERE email = ?', (email,))
+        
+        # Fetch the result (email and hashed password)
+        result = cursor.fetchone()
+
+        # Check if the result is not None (email exists)
+        if result:
+            stored_email, stored_hashed_password = result
+            if check_password_hash(stored_hashed_password, password):
+                # Password matches; login successful
+                session['logged_in'] = True
+                flash('Login successful!', 'success')
+                return redirect('/')
+            else:
+                # Incorrect password
+                flash('Incorrect password. Please try again.', 'error')
+        else:
+            # Email not found
+            flash('Email not found. Please sign up.', 'error')
+
+        return render_template('login.html')
+
 
 @app.route('/')
 def form_page():
