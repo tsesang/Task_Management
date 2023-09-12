@@ -1,0 +1,13 @@
+
+
+
+user
+    - signup 
+    - sign in
+    - developer view ( task list, task_status ( pending,completed))
+
+amdin 
+    -signin
+    -admin view ( view each developer task (all task ) in tabular form)
+    -admin can allocate task to employee
+    
