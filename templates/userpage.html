@@ -1,34 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Page</title>
-    
+
     <!-- Include Bootstrap CSS from CDN -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
+
 <body>
     <div class="container">
-        <h1 class="mt-4">User Page <span style="color: purple; border-bottom: 1px solid purple;"></span></h1>
+        <h1 class="mt-4">User Page <span style="color: purple; border-bottom: 1px solid purple;">
+            {{ user_email }}</span>
+        </h1>
+        <a href="/logout"> <button style="margin-left: 1000px;" type="submit" class="btn btn-primary">Log Out </button></a>
 
         <h2 class="mt-4">All User Task Data</h2>
         <table class="table table-striped">
             <thead>
                 <tr>
                     <th>User ID</th>
-                    <th>Email</th>
                     <th>Task</th>
                     <th>Status</th>
                     <!-- Add more columns as needed -->
                 </tr>
             </thead>
+            <tbody>
+                {% for row in data %}
+                <tr>
+                    <td>{{ row.taskid }}</td>
+                    <td>{{ row.task }}</td>
+                    <!-- Add more columns as needed -->
+                    <td>
+                        {% if row.task_completed %}
+                            <button style="background-color: green; color:white; border-radius: 5px;padding:5px;">completed </button>
+                        {% else %}
+                            <form action="/mark_task_completed/{{ row.taskid }}" method="POST">
+                                <button type="submit" style="background-color: red; color:white; border-radius: 5px;padding:5px;"> Pending (click to complete)</button>
+                            </form>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
         </table>
     </div>
-    
+
     <!-- Include Bootstrap JavaScript and jQuery from CDN -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
+
 </html>

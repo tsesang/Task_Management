@@ -1,17 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Page</title>
-    
+
     <!-- Include Bootstrap CSS from CDN -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
+
 <body>
     <div class="container">
-        <h1 class="mt-4">Admin Page <span style="color: purple; border-bottom: 1px solid purple;">Admin@gmail.com</span></h1>
+        <h1 class="mt-4">Admin Page <span style="color: purple; border-bottom: 1px solid purple;">Admin@gmail.com</span> 
+        </h1>
         <h2>Task Panel</h2>
+
+        <a href="/logout"> <button style="margin-left: 1000px;" type="submit" class="btn btn-primary">Log Out </button></a>
+
 
         <form action="/admin" method="POST">
             <div class="form-group">
@@ -43,8 +49,11 @@
                     <td>{{ row.email }}</td>
                     <td>{{ row.task }}</td>
                     <td>
-                        <span class="badge badge-success" style="padding: 10px;">Assigned</span>
-                        
+                        {% if row.task_completed %}
+                        <span style="background-color: green; color:white; border-radius: 5px;padding:5px;">completed</span>
+                        {% else %}
+                        <span style="background-color: red; color:white; border-radius: 5px;padding:5px;">Pending</span>
+                        {% endif %}
                     </td>
                     <!-- Add more columns as needed -->
                 </tr>
@@ -52,10 +61,11 @@
             </tbody>
         </table>
     </div>
-    
+
     <!-- Include Bootstrap JavaScript and jQuery from CDN -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
+
 </html>

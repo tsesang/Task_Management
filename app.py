@@ -107,21 +107,47 @@ def login():
             return render_template('login.html',msg='Email not found. Please sign up error')
 
         return render_template('login.html')
+    
+    
+    
+    
 
 @app.route('/')
 def form_page():
     return render_template('index.html')
 
-# ... (other imports and setup)
 
 @app.route('/user',methods=['POST','GET'])
 def userpage():
-    return render_template('userpage.html')
+    # Retrieve the email from the session
+    user_email = session.get('email')
+
+    if user_email:
+        # Access the database and retrieve data for the user_email
+        db = get_db()
+        cursor = db.cursor()
+
+        # Execute a SELECT statement to retrieve data for the user_email
+        cursor.execute('SELECT * FROM TaskList WHERE email = ?', (user_email,))
+        
+        # Fetch all the results
+        data = cursor.fetchall()
+
+        # Close the cursor and database connection
+        cursor.close()
+        db.close()
+
+        # Render a template and pass the data to it
+        return render_template('userpage.html', user_email=user_email, data=data)
+    else:
+        # Handle the case when the user is not logged in
+        return render_template('userpage.html',msg="no task for you at the moment .... ")  # Redirect to the login page or handle as needed
+
 
 @app.route('/admin', methods=['POST', 'GET'])
 def adminpage():
     if request.method == 'GET':
-        return render_template('adminpage.html')
+        return redirect('/get_all_data')
     elif not session.get('logged_in'):
         # Redirect to the login page if the user is not logged in
         flash('You must log in to access this page.', 'error')
@@ -129,7 +155,7 @@ def adminpage():
     else:
         email = request.form['email']
         task = request.form['task']
-        status = "assigned"
+        status = 0
 
         db = get_db()  # Call get_db within the route handler
         cursor = db.cursor()
@@ -171,10 +197,30 @@ def get_all_data():
     # Return the data to be displayed in the template
     return render_template('adminpage.html', data=data)
 
+@app.route('/mark_task_completed/<int:taskid>', methods=['POST'])
+def mark_task_completed(taskid):
+    # Extract the taskid from the form data
+    # You can use request.form.get('taskid') to retrieve it, but since it's in the URL, we already have it as the 'taskid' parameter
+
+    # Perform the update in your database to set task_completed to True
+    db = get_db()
+    cursor = db.cursor()
+
+    # Update the task_completed status to True for the specified taskid
+    cursor.execute('UPDATE TaskList SET task_completed = 1 WHERE taskid = ?', (taskid,))
+    db.commit()
+
+    # After updating, redirect to the "user" route
+    return redirect('/user')
+
+@app.route('/logout')
+def logout():
+    return redirect('/')
+
 if __name__ == '__main__':
     app.run(debug=True)
 
-    
+
 if __name__ == '__main__':
     app.run(debug=True)
 
