@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Page</title>
+    
+    <!-- Include Bootstrap CSS from CDN -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-4">Admin Page <span style="color: purple; border-bottom: 1px solid purple;">Admin@gmail.com</span></h1>
+        <h2>Task Panel</h2>
+
+        <form action="/admin" method="POST">
+            <div class="form-group">
+                <label for="email">Enter Employee Email</label>
+                <input type="email" class="form-control" name="email" placeholder="Enter task">
+            </div>
+            <div class="form-group">
+                <label for="task">Enter Task</label>
+                <input type="text" class="form-control" name="task" placeholder="Enter task">
+            </div>
+            <button type="submit" class="btn btn-primary">Assign Task</button>
+        </form>
+
+        <h2 class="mt-4">All User Task Data</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>User ID</th>
+                    <th>Email</th>
+                    <th>Task</th>
+                    <th>Status</th>
+                    <!-- Add more columns as needed -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in data %}
+                <tr>
+                    <td>{{ row.taskid }}</td>
+                    <td>{{ row.email }}</td>
+                    <td>{{ row.task }}</td>
+                    <td>
+                        <span class="badge badge-success" style="padding: 10px;">Assigned</span>
+                        
+                    </td>
+                    <!-- Add more columns as needed -->
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <!-- Include Bootstrap JavaScript and jQuery from CDN -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
